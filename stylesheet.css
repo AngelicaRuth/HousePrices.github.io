@@ -1,0 +1,46 @@
+.gif {
+  top: 40%;
+  left: 50%;
+  width: auto;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.dropDown {
+  top: 70%;
+  left: 50%;
+  width: auto;
+  display: block;
+  text-align: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.price {
+  bottom: 15%;
+  left: 50%;
+  width: inherit;
+  display: block;
+  text-align: center;
+  position: fixed;
+  transform: translate(-50%, -50%);
+}
+
+body {
+  background-color: #DFE2DB;
+}
+
+h2 {
+  font-family: Courier;
+  text-shadow: 2px 2px #7E8F7C;
+  font-size: 1.6em;
+}
+
+h1 {
+  font-family: Courier;
+  text-shadow: 3px 3px #7E8F7C;
+  font-size: 2.3em;
+  text-align: center;
+}

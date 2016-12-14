@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Test page</title>
+    <link type="text/css" rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="http://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="heading">
+      <h1>House Prices according to House</h1>
+    </div>
+    <div><img class="gif" id="myimage" src="placeholder.gif"></div>
+    <div class="dropDown">
+      <select class="year_in">
+        <option value="#" disabled selected>Select year</option>
+        <option value="1992">1992</option>
+        <option value="1993">1993</option>
+        <option value="1994">1994</option>
+        <option value="1995">1995</option>
+        <option value="1996">1996</option>
+        <option value="1997">1997</option>
+        <option value="1998">1998</option>
+        <option value="1999">1999</option>
+        <option value="2000">2000</option>
+        <option value="2001">2001</option>
+        <option value="2002">2002</option>
+        <option value="2003">2003</option>
+        <option value="2004">2004</option>
+        <option value="2005">2005</option>
+        <option value="2006">2006</option>
+        <option value="2007">2007</option>
+        <option value="2008">2008</option>
+        <option value="2009">2009</option>
+        <option value="2010">2010</option>
+        <option value="2011">2011</option>
+        <option value="2012">2012</option>
+        <option value="2013">2013</option>
+        <option value="2014">2014</option>
+        <option value="2015">2015</option>
+      </select>
+
+      <select class="type_in">
+        <option value="1" disabled selected>Select your option</option>
+        <option value="1">Single House/City House</option>
+        <option value="2">Buildings for seasonal and secondary use</option>
+        <option value="3">Multi-dweling and commercial buildnings</option>
+        <option value="4">Manufacturers industries</option>
+        <option value="5">Argicultural real estate</option>
+      </select>
+
+      <button class="js-get" onclick="changeGif">Get Data</button>
+    </div>
+
+    <div class="price">
+      <h2>Average Purchase Price: <span class="price_out"></span></h2>
+    </div>
+
+
+
+    <script>
+      $(function(){
+
+        $(".js-get").click(function(){
+          var getYear = $(".year_in").val();
+          var getType = Number($(".type_in").val());
+
+          if(getYear&&!isNaN(getYear)&&getYear>=1992&&getYear<=2015){
+            console.log("Year passed validation");
+          }else{
+            console.log("Year did not pass validation");
+            getYear = 2015;
+          }
+
+          if(getType&&getType>=1&&getType<=5){
+            console.log("Type passed validation");
+          }else{
+            console.log("Type did not pass validation");
+            getType = 1;
+          }
+
+          console.log("Will request data for type "+getType+" and year "+getYear);
+
+          var postURL = "http://api.scb.se/OV0104/v1/doris/en/ssd/START/BO/BO0501/BO0501B/FastprisManadAr";
+          var jsonData = {
+              "query": [
+                {
+                  "code": "Forvarvsmanad",
+                  "selection": {
+                    "filter": "item",
+                    "values": [
+                      "alla"
+                    ]
+                  }
+                },
+                {
+                  "code": "Fastighetstyp",
+                  "selection": {
+                    "filter": "item",
+                    "values": [
+                      getType
+                    ]
+                  }
+                },
+                {
+                  "code": "ContentsCode",
+                  "selection": {
+                    "filter": "item",
+                    "values": [
+                      "BO0501I7"
+                    ]
+                  }
+                },
+                /*{
+                  "code": "Tid",
+                  "selection": {
+                    "filter": "item",
+                    "values": [
+                      getYear
+                    ]
+                  }
+                }*/
+              ],
+              "response": {
+                "format": "json"
+              }
+            }
+          $.post( postURL, JSON.stringify(jsonData), function(data) {
+            console.log(data);
+
+            var year = [];
+            var price = [];
+
+            for(var i=0; i<data.data.length; i++){
+              year[i] = data.data[i].key[2];
+              price[i] = data.data[i].values[0];
+            }
+            var labelData = {
+              [year[0]]: price[0],
+              [year[1]]: price[1],
+              [year[2]]: price[2],
+              [year[3]]: price[3],
+              [year[4]]: price[4],
+              [year[5]]: price[5],
+              [year[6]]: price[6],
+              [year[7]]: price[7],
+              [year[8]]: price[8],
+              [year[9]]: price[9],
+              [year[10]]: price[10],
+              [year[11]]: price[11],
+              [year[12]]: price[12],
+              [year[13]]: price[13],
+              [year[14]]: price[14],
+              [year[15]]: price[15],
+              [year[16]]: price[16],
+              [year[17]]: price[17],
+              [year[18]]: price[18],
+              [year[19]]: price[19],
+              [year[20]]: price[20],
+              [year[21]]: price[21],
+              [year[22]]: price[22],
+              [year[23]]: price[23]
+            }
+            console.log("data",labelData);
+            console.log("year",year);
+            console.log("price",price);
+
+            //console.log(data.data[23].values[0]);
+            //console.log(data.data[23].key[2]);
+
+            //var type = data.data[23].values[0];
+            /*var price = data.data[1].values[0];
+            var year = data.data[0].key[1];*/
+
+
+            //$(".year").html(year);
+            //$(".type_out").html(output);
+            $(".price_out").html(labelData[getYear] + ' 000 SEK');
+
+            var getPrice = labelData[getYear];
+            console.log("price input",getPrice);
+
+            //For Houses
+
+            if (getPrice < 1000 && getType == 1 || getPrice < 600 && getType == 2 || getPrice < 7000 && getType == 3 || getPrice < 4000 && getType == 4 || getPrice < 1000 && getType == 5) {
+              document.getElementById('myimage').src = 'http://i.giphy.com/TE9nRCl3NVxdK.gif';
+
+            }
+            else if(getType == 1 && getPrice >= 1000 && getPrice < 2000 || getType == 2 && getPrice >= 600 && getPrice < 1200 || getType == 3 && getPrice >= 7000 && getPrice < 9000 || getType == 4 && getPrice >= 4000 && getPrice < 5000 || getType == 5 && getPrice >= 1000 && getPrice < 1500) {
+              document.getElementById('myimage').src = 'http://i.giphy.com/t7pp3YLzz6Tfy.gif';
+            }
+            else if(getType == 1 && getPrice >= 2000 || getType == 2 && getPrice >= 1200 || getType == 3 && getPrice >= 9000 || getType == 4 && getPrice >= 5000 || getType == 5 && getPrice >= 1500) {
+                document.getElementById('myimage').src = 'http://i.giphy.com/oQydUNp4hqIEw.gif';
+            }
+        });
+      })
+    });
+    </script>
+
+  </body>
+
+</html>
